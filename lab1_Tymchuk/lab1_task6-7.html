@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вибір товару</title>
+    <script>
+        let products = [
+            "Іграшка", "Інструмент", "Іриски", 
+            "Телефон", "Телевізор", "Термос",
+            "Торт", "Тарілка", "Трактор"
+        ];
+        let quantities = [50, 100, 200, 30, 15, 80, 25, 300, 5];
+        let costs = [100, 1500, 20, 5000, 10000, 300, 150, 50, 500000];
+
+        let currentProductIndex;
+
+        function populateDropdown() {
+            let select = document.form1.productSelect;
+            for (let i = 0; i < products.length; i++) {
+                let option = document.createElement('option');
+                option.value = i;
+                option.text = products[i];
+                select.add(option);
+            }
+        }
+
+        function fun1() {
+            currentProductIndex = parseInt(document.form1.productSelect.value);
+            document.form1.outputQuantity.value = "Кількість: " + quantities[currentProductIndex];
+            document.form1.outputCost.value = "Вартість: " + costs[currentProductIndex] + " грн";
+        }
+
+        function fun2() {
+            if (currentProductIndex !== undefined) {
+                let totalCost = quantities[currentProductIndex] * costs[currentProductIndex];
+                document.form1.outputTotalCost.value = "Загальна сума: " + totalCost + " грн";
+            } else {
+                document.form1.outputTotalCost.value = "Оберіть товар спочатку";
+            }
+        }
+
+        window.onload = populateDropdown;
+    </script>
+</head>
+<body>
+    <h3>Завдання 6-7</h3>
+    <form name="form1">
+        Оберіть товар:
+        <select name="productSelect" onchange="fun1()">
+            <option value="" disabled selected>Виберіть товар</option>
+        </select><br><br>
+
+        <input type="button" value="Наявна кількість і вартість" onClick="fun1()"><br><br>
+
+        <input type="text" size="50" name="outputQuantity" readonly><br>
+        <input type="text" size="50" name="outputCost" readonly><br><br>
+
+        <input type="button" value="Загальна сума" onClick="fun2()"><br><br>
+
+        <input type="text" size="50" name="outputTotalCost" readonly><br>
+    </form>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab3</title>
+    <style>
+       .tree ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        .tree li {
+            cursor: pointer;
+            user-select: none;
+        }
+        .tree .hidden {
+            display: none;
+        }
+        /* Нові стилі для дерева ієрархії */
+        .tree .caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .tree .caret-down::before {
+            transform: rotate(90deg);
+        }
+    </style>
+    <script>
+        // Початкові налаштування для екранної клавіатури
+        let isUkrainian = true; // Початкова розкладка - українська
+        const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+        const letters_ua = ['а', 'б', 'в', 'г', 'д', 'е', 'є', 'ж', 'з', 'и', 'і', 'ї', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ь', 'ю', 'я'];
+        const letters_en = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
+        function createKeyboard() {
+            let keyboard = document.getElementById('keyboard');
+            keyboard.innerHTML = ""; // Очищаємо стару клавіатуру
+
+            // Додаємо цифри
+            let digitsRow = '<div>';
+            digits.forEach(digit => {
+                digitsRow += `<button onclick="addSymbol('${digit}')">${digit}</button>`;
+            });
+            digitsRow += '</div>';
+            keyboard.innerHTML += digitsRow;
+
+            // Додаємо літери
+            let letters = isUkrainian ? letters_ua : letters_en;
+            let lettersRow = '<div>';
+            letters.forEach((letter, index) => {
+                lettersRow += `<button onclick="addSymbol('${letter}')">${letter}</button>`;
+                if ((index + 1) % 11 === 0) {
+                    lettersRow += '</div><div>'; // Створюємо новий рядок після кожних 11 літер
+                }
+            });
+            lettersRow += '</div>';
+            keyboard.innerHTML += lettersRow;
+        }
+
+        function addSymbol(symbol) {
+            let display = document.getElementById('display');
+            display.value += symbol;
+        }
+
+        function cleanDisplay() {
+            document.getElementById('display').value = "";
+        }
+
+        function toggleLanguage() {
+            isUkrainian = !isUkrainian;
+            createKeyboard(); // Перестроюємо клавіатуру після зміни розкладки
+        }
+
+        // Логіка для розрахунку площі прямокутника
+        function calculateArea() {
+            let width = document.getElementById('width').value;
+            let height = document.getElementById('height').value;
+            let area = width * height;
+            document.getElementById('area').innerHTML = `Площа: ${area}`;
+        }
+
+        // Логіка для перегляду зображень
+        let images = ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg']; // Масив із зображеннями
+        let currentIndex = 0; // Індекс поточного зображення
+
+        function showImage() {
+            let imgElement = document.getElementById('imageDisplay');
+            imgElement.src = images[currentIndex];
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length; // Циклічний перехід вперед
+            showImage();
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length; // Циклічний перехід назад
+            showImage();
+        }
+
+        // Логіка для арифметичних завдань
+        let correctAnswers = 0; // Рахунок правильних відповідей
+        let totalQuestions = 0; // Загальна кількість питань
+        let maxQuestions = 5; // Максимальна кількість завдань
+        let currentQuestion = 1; // Поточне завдання
+        let num1, num2, operator, correctResult;
+
+        function generateQuestion() {
+            if (currentQuestion <= maxQuestions) {
+                num1 = Math.floor(Math.random() * 10); // Випадкове число від 0 до 9
+                num2 = Math.floor(Math.random() * 10);
+                const operations = ['+', '-', '*', '/'];
+                operator = operations[Math.floor(Math.random() * operations.length)]; // Випадковий оператор
+
+                // Обчислюємо правильну відповідь
+                if (operator === '+') correctResult = num1 + num2;
+                else if (operator === '-') correctResult = num1 - num2;
+                else if (operator === '*') correctResult = num1 * num2;
+                else if (operator === '/') correctResult = num2 !== 0 ? (num1 / num2).toFixed(2) : 'невизначено';
+
+                document.getElementById('question').innerHTML = `Завдання ${currentQuestion}: ${num1} ${operator} ${num2} = ?`;
+            } else {
+                document.getElementById('question').innerHTML = "Всі завдання виконані!";
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer').value;
+
+            if (userAnswer == correctResult) {
+                correctAnswers++;
+                document.getElementById('result').innerHTML = "Правильно!";
+            } else {
+                document.getElementById('result').innerHTML = `Помилка, правильна відповідь: ${correctResult}`;
+            }
+
+            totalQuestions++;
+            updateScore();
+        }
+
+        function updateScore() {
+            document.getElementById('score').innerHTML = `Правильні відповіді: ${correctAnswers}/${totalQuestions}`;
+        }
+
+        function nextQuestion() {
+            document.getElementById('answer').value = ""; // Очищаємо поле відповіді
+            currentQuestion++;
+            generateQuestion(); // Генеруємо нове питання
+        }
+
+        // Логіка для дерева (Завдання 6)
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggler = document.getElementsByClassName("caret");
+            for (var i = 0; i < toggler.length; i++) {
+                toggler[i].addEventListener("click", function() {
+                    this.parentElement.querySelector(".nested").classList.toggle("hidden");
+                    this.classList.toggle("caret-down");
+                });
+            }
+        });
+    </script>
+</head>
+<body onload="createKeyboard(); showImage(); generateQuestion();">
+    <h1>Лабораторна робота 3</h1>
+    
+    <!-- Завдання 1: Розрахунок площі прямокутника -->
+    <h2>Розрахунок площі прямокутника</h2>
+    <form>
+        <label for="width">Ширина:</label>
+        <input type="number" id="width" onkeyup="calculateArea()">
+        <br>
+        <label for="height">Висота:</label>
+        <input type="number" id="height" onkeyup="calculateArea()">
+    </form>
+    <p id="area">Площа: </p>
+
+    <!-- Завдання 2 і 3: Екранна клавіатура -->
+    <h2>Екранна клавіатура</h2>
+
+    <!-- Текстове поле -->
+    <textarea id="display" rows="3" cols="40"></textarea>
+    <br>
+    
+    <!-- Кнопки -->
+    <button onclick="cleanDisplay()">Очистити поле</button>
+    <button onclick="toggleLanguage()">Alt+Shift (Змінити розкладку)</button>
+    
+    <!-- Клавіатура -->
+    <div id="keyboard"></div>
+
+    <!-- Завдання 4: Перегляд зображень -->
+    <h2>Перегляд зображень</h2>
+    <img id="imageDisplay" src="" alt="Зображення" width="400" height="300">
+    <br>
+    <button onclick="prevImage()">Назад</button>
+    <button onclick="nextImage()">Вперед</button>
+
+    <!-- Завдання 5: Арифметичні завдання -->
+    <h2>Арифметичні завдання</h2>
+    <p id="question">Завдання: </p>
+    <input type="text" id="answer">
+    <button onclick="checkAnswer()">Перевірити</button>
+    <button onclick="nextQuestion()">Наступне завдання</button>
+    <p id="result">Результат: </p>
+    <p id="score">Правильні відповіді: 0/0</p>
+
+    <!-- Завдання 6: Дерево ієрархії -->
+    <h2>Дерево ієрархії</h2>
+    <div class="tree">
+        <ul>
+            <li><span class="caret">fruits</span>
+                <ul class="nested hidden">
+                    <li>apple</li>
+                    <li>pineapple</li>
+                    <li>apricot</li>
+                    <li>pear</li>
+                    <li>lemon</li>
+                </ul>
+            </li>
+            <li><span class="caret">vegetables</span>
+                <ul class="nested hidden">
+                    <li>potatoes</li>
+                    <li>beetroot</li>
+                    <li>carrots</li>
+                    <li>pear</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

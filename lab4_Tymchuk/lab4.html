@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестування</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .question { margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Тестування</h1>
+    <form id="quizForm">
+        <div class="question">
+            <p>1. Яка столиця України?</p>
+            <input type="radio" name="q1" value="1" id="q1a"><label for="q1a">Київ</label><br>
+            <input type="radio" name="q1" value="0" id="q1b"><label for="q1b">Львів</label><br>
+            <input type="radio" name="q1" value="0" id="q1c"><label for="q1c">Харків</label><br>
+            <input type="radio" name="q1" value="0" id="q1d"><label for="q1d">Одеса</label>
+        </div>
+
+        <div class="question">
+            <p>2. Які кольори присутні на прапорі України?</p>
+            <input type="checkbox" name="q2" value="1" id="q2a"><label for="q2a">Синій</label><br>
+            <input type="checkbox" name="q2" value="1" id="q2b"><label for="q2b">Жовтий</label><br>
+            <input type="checkbox" name="q2" value="0" id="q2c"><label for="q2c">Червоний</label><br>
+            <input type="checkbox" name="q2" value="0" id="q2d"><label for="q2d">Зелений</label>
+        </div>
+
+        <div class="question">
+            <p>3. Яка найбільша річка України?</p>
+            <select name="q3">
+                <option value="0">Дністер</option>
+                <option value="1">Дніпро</option>
+                <option value="0">Південний Буг</option>
+                <option value="0">Десна</option>
+            </select>
+        </div>
+
+        <div class="question">
+            <p>4. Які з цих елементів входять до складу борщу?</p>
+            <select name="q4" multiple>
+                <option value="1">Буряк</option>
+                <option value="1">Капуста</option>
+                <option value="0">Гречка</option>
+                <option value="0">Апельсин</option>
+            </select>
+        </div>
+
+        <div class="question">
+            <p>5. Хто є автором "Заповіту"?</p>
+            <input type="radio" name="q5" value="0" id="q5a"><label for="q5a">Іван Франко</label><br>
+            <input type="radio" name="q5" value="1" id="q5b"><label for="q5b">Тарас Шевченко</label><br>
+            <input type="radio" name="q5" value="0" id="q5c"><label for="q5c">Леся Українка</label><br>
+            <input type="radio" name="q5" value="0" id="q5d"><label for="q5d">Микола Гоголь</label>
+        </div>
+
+        <div class="question">
+            <p>6. Які області межують з Польщею?</p>
+            <input type="checkbox" name="q6" value="1" id="q6a"><label for="q6a">Львівська</label><br>
+            <input type="checkbox" name="q6" value="1" id="q6b"><label for="q6b">Волинська</label><br>
+            <input type="checkbox" name="q6" value="0" id="q6c"><label for="q6c">Рівненська</label><br>
+            <input type="checkbox" name="q6" value="0" id="q6d"><label for="q6d">Тернопільська</label>
+        </div>
+
+        <div class="question">
+            <p>7. Напишіть прізвище першого президента України:</p>
+            <input type="text" name="q7">
+        </div>
+
+        <button type="button" onclick="finishQuiz()">Завершити тестування</button>
+    </form>
+
+    <div id="results" style="display: none;">
+        <h2>Результати тестування</h2>
+        <table id="resultsTable">
+            <tr>
+                <th>Питання</th>
+                <th>Відповідь</th>
+                <th>Бали</th>
+            </tr>
+        </table>
+        <p>Загальний бал: <span id="totalScore"></span></p>
+    </div>
+
+    <script>
+        function finishQuiz() {
+            let totalScore = 0;
+            const form = document.getElementById('quizForm');
+            const resultsTable = document.getElementById('resultsTable');
+
+            // Очищаємо попередні результати
+            while (resultsTable.rows.length > 1) {
+                resultsTable.deleteRow(1);
+            }
+
+            // Питання 1 і 5 (radio)
+            ['q1', 'q5'].forEach((q, index) => {
+                const selected = form.querySelector(`input[name="${q}"]:checked`);
+                let score = selected ? parseInt(selected.value) : 0;
+                totalScore += score;
+                addResultRow(resultsTable, index === 0 ? 1 : 5, selected ? selected.nextElementSibling.textContent : 'Не вибрано', score);
+            });
+
+            // Питання 2 і 6 (checkbox)
+            ['q2', 'q6'].forEach((q, index) => {
+                const selected = Array.from(form.querySelectorAll(`input[name="${q}"]:checked`));
+                let score = 0;
+                if (selected.length === 2) {
+                    score = selected.reduce((sum, checkbox) => sum + parseInt(checkbox.value), 0);
+                }
+                totalScore += score;
+                addResultRow(resultsTable, index === 0 ? 2 : 6, selected.map(cb => cb.nextElementSibling.textContent).join(', ') || 'Не вибрано', score);
+            });
+
+            // Питання 3 (select)
+            const q3 = form.q3;
+            let q3Score = parseInt(q3.value);
+            totalScore += q3Score;
+            addResultRow(resultsTable, 3, q3.options[q3.selectedIndex].text, q3Score);
+
+            // Питання 4 (select multiple)
+            const q4 = Array.from(form.q4.selectedOptions);
+            let q4Score = 0;
+            if (q4.length === 2) {
+                q4Score = q4.reduce((sum, option) => sum + parseInt(option.value), 0);
+            }
+            totalScore += q4Score;
+            addResultRow(resultsTable, 4, q4.map(opt => opt.text).join(', ') || 'Не вибрано', q4Score);
+
+            // Питання 7 (text)
+            const q7 = form.q7.value.trim().toLowerCase();
+            let q7Score = q7 === 'кравчук' ? 1 : 0;
+            totalScore += q7Score;
+            addResultRow(resultsTable, 7, q7 || 'Не заповнено', q7Score);
+
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function addResultRow(table, questionNumber, answer, score) {
+            const row = table.insertRow();
+            row.insertCell(0).textContent = questionNumber;
+            row.insertCell(1).textContent = answer;
+            row.insertCell(2).textContent = score;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Лабораторна робота - JavaScript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .task {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .example {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-left: 4px solid #007bff;
+            background-color: #e9ecef;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #dee2e6;
+            margin: 10px 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            max-width: 300px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76,175,80,0.2);
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+            position: relative;
+            right: 0; /* Вирівняти по полю вводу */
+            top: 5px; /* Відступ від поля вводу */
+            width: auto;
+            background: #fff;
+            padding: 5px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .invalid {
+            border-color: red !important;
+            color: red;
+        }
+        .valid {
+            border-color: #4CAF50 !important;
+        }
+        .validation-icon {
+            position: absolute;
+            right: -30px;
+            top: 35px;
+            width: 20px;
+            height: 20px;
+            display: none;
+        }
+        .validation-icon.valid {
+            display: block;
+            color: #4CAF50;
+        }
+        .validation-icon.invalid {
+            display: block;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <!-- Завдання 1: Розбір email -->
+    <div class="task">
+        <h2>Завдання 1: Розбір email адреси</h2>
+        
+        <div class="example">
+            <h3>Вихідний код:</h3>
+            <pre>
+let s="dwbyu@mail.ua";
+let r=/^([a-z0-9]+)(\.[a-z0-9]+)*@([a-z0-9]+)(\.[a-z0-9]+)*$/i;
+let a=s.match(r);
+for (i=0;i<a.length;i++)
+{
+    document.writeln("&lt;hr&gt; a["+i+"] "+a[i]);
+}
+            </pre>
+        </div>
+
+        <div class="example">
+            <h3>Пояснення регулярного виразу:</h3>
+            <ul>
+                <li><code>^</code> - початок рядка</li>
+                <li><code>([a-z0-9]+)</code> - перша група: літери та цифри (1 або більше)</li>
+                <li><code>(\.[a-z0-9]+)*</code> - друга група: крапка та літери/цифри (може повторюватись)</li>
+                <li><code>@</code> - символ @</li>
+                <li><code>([a-z0-9]+)</code> - третя група: домен (літери та цифри)</li>
+                <li><code>(\.[a-z0-9]+)*</code> - четверта група: доменні зони</li>
+                <li><code>$</code> - кінець рядка</li>
+                <li><code>i</code> - флаг регістронезалежності</li>
+            </ul>
+        </div>
+
+        <div class="result">
+            <h3>Результат виконання:</h3>
+            <div id="emailOutput"></div>
+        </div>
+    </div>
+
+    <!-- Завдання 2: Форма реєстрації з розширеною валідацією -->
+    <div class="task">
+        <h2>Завдання 2: Форма реєстрації з розширеною валідацією</h2>
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error" id="emailError">Email повинен закінчуватися на @pnu.edu.ua</div>
+                <div class="validation-icon">✓</div>
+            </div>
+
+            <div class="form-group">
+                <label for="fullName">Ім'я та прізвище:</label>
+                <input type="text" id="fullName" name="fullName" required>
+                <div class="error" id="fullNameError">Ім'я: перша буква велика, інші малі. Прізвище: всі букви великі</div>
+                <div class="validation-icon">✓</div>
+            </div>
+
+            <div class="form-group">
+                <label for="login">Логін:</label>
+                <input type="text" id="login" name="login" required>
+                <div class="error" id="loginError">Дозволена тільки латиниця</div>
+                <div class="validation-icon">✓</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required>
+                <div class="error" id="passwordError">Мінімум 8 символів: 1 буква, 1 цифра, 1 спецсимвол (_-!@#$%^&*)</div>
+                <div class="validation-icon">✓</div>
+            </div>
+
+            <div class="form-group">
+                <label for="zipCode">Поштовий індекс:</label>
+                <input type="text" id="zipCode" name="zipCode" required>
+                <div class="error" id="zipCodeError">Має містити 5 цифр</div>
+                <div class="validation-icon">✓</div>
+            </div>
+
+            <button type="submit">Зареєструватися</button>
+        </form>
+    </div>
+
+    <script>
+        // Завдання 1: Розбір email
+        let s = "dwbyu@mail.ua";
+        let r = /^([a-z0-9]+)(\.[a-z0-9]+)*@([a-z0-9]+)(\.[a-z0-9]+)*$/i;
+        let a = s.match(r);
+        
+        let emailOutput = document.getElementById('emailOutput');
+        for (i = 0; i < a.length; i++) {
+            emailOutput.innerHTML += `<hr> a[${i}] ${a[i]}`;
+        }
+
+        // Завдання 2: Розширена валідація форми
+        const form = document.getElementById('registrationForm');
+        const inputs = form.querySelectorAll('input');
+
+        // Функція валідації поля
+        function validateField(input, regex, errorMsg) {
+            const isValid = regex.test(input.value);
+            const error = input.parentElement.querySelector('.error');
+            const icon = input.parentElement.querySelector('.validation-icon');
+            
+            input.classList.remove('valid', 'invalid');
+            icon.classList.remove('valid', 'invalid');
+            error.style.display = 'none';
+
+            if (input.value) {
+                if (isValid) {
+                    input.classList.add('valid');
+                    icon.classList.add('valid');
+                } else {
+                    input.classList.add('invalid');
+                    icon.classList.add('invalid');
+                    error.style.display = 'block';
+                }
+            }
+            return isValid;
+        }
+
+        // Регулярні вирази для валідації
+        const patterns = {
+            email: /^[a-zA-Z0-9._-]+@pnu\.edu\.ua$/,
+            fullName: /^[А-ЯЄІЇҐA-Z][а-яєіїґa-z]+ [А-ЯЄІЇҐA-Z]+$/,
+            login: /^[a-zA-Z]+$/,
+            password: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[_\-!@#$%^&*]).{8,}$/,
+            zipCode: /^\d{5}$/
+        };
+
+        // Валідація при введенні
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                validateField(this, patterns[this.id], this.parentElement.querySelector('.error').textContent);
+            });
+        });
+
+        // Валідація при відправці форми
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            
+            // Перевірка кожного поля
+            inputs.forEach(input => {
+                if (!validateField(input, patterns[input.id], input.parentElement.querySelector('.error').textContent)) {
+                    isValid = false;
+                }
+            });
+
+            if (isValid) {
+                alert('Форма успішно відправлена!');
+                this.reset();
+                // Очищення стилів валідації
+                inputs.forEach(input => {
+                    input.classList.remove('valid', 'invalid');
+                    input.parentElement.querySelector('.validation-icon').classList.remove('valid', 'invalid');
+                    input.parentElement.querySelector('.error').style.display = 'none';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<html>
+<head>
+<script type="text/javascript" src="../jquery-3.7.1.min.js"></script>
+<style>
+    .highlighted {
+        border: 2px solid blue;
+        background-color: lightblue;
+        padding: 10px;
+        margin: 10px;
+    }
+    
+    .image-container {
+        margin: 20px 0;
+    }
+    
+    .tooltip {
+        display: none;
+        position: absolute;
+        background: black;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+    }
+    
+    form {
+        margin: 20px 0;
+    }
+    
+    span.error {
+        color: red;
+    }
+</style>
+<script>
+$(document).ready(function() {
+    // Завдання 3.1 - Стилі для div при кліках
+    $("#styleDiv").bind({
+        click: function() {
+            $(this).addClass('highlighted');
+        },
+        dblclick: function() {
+            $(this).removeClass('highlighted');
+        }
+    });
+
+    // Завдання 3.2 - Кнопки з різними кліками
+    $("#singleClickBtn").bind('click', function() {
+        alert('Одинарний клік');
+    });
+    
+    $("#doubleClickBtn").bind('dblclick', function() {
+        alert('Подвійний клік');
+    });
+
+    // Завдання 3.3 - Робота із зображенням
+    $("#showImage").click(function() {
+        $("#myImage").show();
+    });
+    
+    $("#myImage").click(function() {
+        $(this).hide();
+    });
+    
+    $("#myImage").hover(
+        function(e) {
+            $(".tooltip")
+                .css({
+                    left: e.pageX + 10,
+                    top: e.pageY + 10
+                })
+                .show();
+        },
+        function() {
+            $(".tooltip").hide();
+        }
+    );
+
+    // Завдання 3.4 - Перевірка форми
+    $("form").submit(function() {
+        if ($("input:first").val() == "correct") {
+            $("span").text("Перевіряєм...").show();
+            return true;
+        }
+        $("span").text("Неправильно!").show().fadeOut(1000);
+        return false;
+    });
+});
+</script>
+</head>
+<body>
+    <h2>Завдання 3.1 - Клікабельний div</h2>
+    <div id="styleDiv">
+        Натисніть на мене один раз для додавання стилів, двічі для скидання
+    </div>
+
+    <h2>Завдання 3.2 - Кнопки з різними типами кліків</h2>
+    <button id="singleClickBtn">Натисніть один раз</button>
+    <button id="doubleClickBtn">Натисніть двічі</button>
+
+    <h2>Завдання 3.3 - Робота із зображенням</h2>
+    <div class="image-container">
+        <a href="#" id="showImage">Показати зображення</a>
+        <img id="myImage" src="image1.jpg" style="display: none;" alt="Тестове зображення">
+        <div class="tooltip">Ням ням...</div>
+    </div>
+
+    <h2>Завдання 3.4 - Форма перевірки</h2>
+    <p>Введіть в текстове поле слово 'correct'</p>
+    <form action="javascript:alert('Успішно!');">
+        <div>
+            <input type="text" />
+            <input type="submit" value="Перевірити" />
+        </div>
+    </form>
+    <span class="error"></span>
+</body>
+</html>

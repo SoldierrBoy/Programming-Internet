@@ -1,0 +1,47 @@
+<html> 
+<head>  
+<script type="text/javascript" src="../jquery-3.7.1.min.js"></script>  
+<script src="../jquery-3.7.1.min.js"></script>
+<style>
+    .highlight {
+        background-color: #ffeb3b;
+        padding: 10px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+</style>
+<script>
+    $(document).ready(function(){
+        alert("Jquery ready!!!");
+        
+        // Додаємо параграфи з текстом на початку і в кінці
+        $("p:first").text("DOM first!");
+        jQuery("p:last").text("DOM last!");
+        
+        // Початковий код для приховування/показу тексту
+        var $text = $('#hide_text');
+        $text.hide();
+        $('.button').click(function() {
+            $text.show(200);
+        }); 
+
+        // Додаємо ефект наведення для div елементів
+        $('div').hover(
+            function() {
+                $(this).addClass('highlight');
+            },
+            function() {
+                $(this).removeClass('highlight');
+            }
+        );
+    }); 
+</script>
+</head>  
+<body>  
+<p>Перший параграф</p>
+<H1>Контент сторінки</H1>
+<a href="#" class="button">Натисніть, щоб показати текст</a> 
+<div id="hide_text">Демонстраційний прихований текст</div> 
+<p>Останній параграф</p>
+</body>  
+</html>

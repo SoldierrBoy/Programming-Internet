@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery Анімації</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+        }
+        .demo-block {
+            width: 100px;
+            height: 100px;
+            background: #3498db;
+            margin: 10px;
+            display: inline-block;
+        }
+        .control-panel {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        #animation-container {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Завдання 1: Демонстрація методів jQuery</h2>
+    
+    <div class="control-panel">
+        <button id="fadeToggleBtn">fadeToggle()</button>
+        <button id="finishBtn">finish()</button>
+        <button id="hideBtn">hide()</button>
+        <button id="fxOffBtn">Toggle $.fx.off</button>
+        <button id="resetBtn">Reset</button>
+    </div>
+    
+    <div id="animation-container">
+        <div id="block1" class="demo-block">fadeToggle</div>
+        <div id="block2" class="demo-block">finish</div>
+        <div id="block3" class="demo-block">hide</div>
+    </div>
+
+    <script src="../jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // fadeToggle демонстрація
+            $('#fadeToggleBtn').click(function() {
+                $('#block1').fadeToggle(1000);
+            });
+
+            // finish демонстрація
+            $('#finishBtn').click(function() {
+                $('#block2')
+                    .fadeOut(2000)
+                    .fadeIn(2000)
+                    .finish();
+            });
+
+            // hide демонстрація
+            $('#hideBtn').click(function() {
+                $('#block3').hide('slow');
+            });
+
+            // $.fx.off демонстрація
+            $('#fxOffBtn').click(function() {
+                $.fx.off = !$.fx.off;
+                alert('Анімації ' + ($.fx.off ? 'вимкнені' : 'увімкнені'));
+            });
+
+            // Reset всіх блоків
+            $('#resetBtn').click(function() {
+                $('.demo-block')
+                    .show()
+                    .css({
+                        'opacity': 1,
+                        'display': 'inline-block'
+                    });
+            });
+
+            // Додаємо автоматичну анімацію для демонстрації finish()
+            setInterval(function() {
+                if (!$('#block2').is(':animated')) {
+                    $('#block2')
+                        .fadeOut(2000)
+                        .fadeIn(2000);
+                }
+            }, 4000);
+        });
+    </script>
+</body>
+</html>
